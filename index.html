@@ -1,172 +1,166 @@
 <!DOCTYPE html>
-<html lang ="eng">
-    <head>
-        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-       <style>
-           <script>
-  function setHonte(niveau) {
-    const dots = document.querySelectorAll('.dot');
-    dots.forEach((dot, index) => {
-      if (index < niveau) {
-        dot.classList.add('active');
-      } else {
-        dot.classList.remove('active');
-      }
-    });
-  }
-</script>
-  body {
-    background-color: #0D0D0D;
-    color: #F5F0E8;
-    font-family: 'DM Sans', sans-serif;
-    display: flex;
-    justify-content: center;
-    padding: 3rem 1rem;
-  }
-
-  .carte {
-    background-color: #1A1A1A;
-    border-radius: 20px;
-    padding: 2rem;
-    width: 100%;
-    max-width: 420px;
-  }
-
-  h1 {
-    color: #FFE566;
+<html lang="en">
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>ProcrastiMap</title>
+  <style>
+    body {
+      background-color: #0D0D0D;
+      color: #F5F0E8;
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 3rem 1rem;
+    }
+    .carte {
+      background-color: #1A1A1A;
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 420px;
+    }
+    h1 {
+      color: #FFE566;
       font-family: 'Syne', sans-serif;
-  font-size: 1.8rem;
-    font-size: 1.5rem;
-    margin-bottom: 0.25rem;
-  }
+      font-size: 1.8rem;
+      margin-bottom: 0.25rem;
+    }
+    p {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      font-size: 0.75rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    select, input {
+      width: 100%;
+      background-color: #252525;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: #F5F0E8;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .honte {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+    .dot {
+      width: 44px;
+      height: 44px;
+      background-color: #252525;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #F5F0E8;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .dot.active {
+      background-color: #FFE566;
+      color: #0D0D0D;
+      border-color: #FFE566;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin: 1rem 0;
+    }
+    button {
+      width: 100%;
+      background-color: #FFE566;
+      color: #0D0D0D;
+      border-radius: 999px;
+      padding: 0.875rem 2rem;
+      border: none;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="carte">
+    <h1>How have you procrastinated? 😬</h1>
+    <p>Come on, we won't judge. okay, maybe a little.</p>
 
-  p {
-    color: #888;
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
-  }
+    <label>Country</label>
+    <select>
+      <option value="">-- Country --</option>
+      <option>🇩🇿 Algeria</option>
+      <option>🇩🇪 Germany</option>
+      <option>🇦🇷 Argentina</option>
+      <option>🇦🇺 Australia</option>
+      <option>🇧🇪 Belgium</option>
+      <option>🇧🇷 Brazil</option>
+      <option>🇨🇦 Canada</option>
+      <option>🇨🇳 China</option>
+      <option>🇰🇷 South Korea</option>
+      <option>🇪🇸 Spain</option>
+      <option>🇺🇸 USA</option>
+      <option>🇫🇷 France</option>
+      <option>🇬🇧 United Kingdom</option>
+      <option>🇮🇳 India</option>
+      <option>🇮🇩 Indonesia</option>
+      <option>🇮🇹 Italy</option>
+      <option>🇯🇵 Japan</option>
+      <option>🇲🇦 Morocco</option>
+      <option>🇲🇽 Mexico</option>
+      <option>🇳🇬 Nigeria</option>
+      <option>🇳🇴 Norway</option>
+      <option>🇳🇿 New Zealand</option>
+      <option>🇵🇰 Pakistan</option>
+      <option>🇳🇱 Netherlands</option>
+      <option>🇵🇭 Philippines</option>
+      <option>🇵🇹 Portugal</option>
+      <option>🇸🇪 Sweden</option>
+      <option>🇨🇭 Switzerland</option>
+      <option>🇹🇷 Turkey</option>
+      <option>🇺🇦 Ukraine</option>
+      <option>🇻🇳 Vietnam</option>
+    </select>
 
-  select, input {
-    width: 100%;
-    background-color: #252525;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    color: #F5F0E8;
-    font-size: 0.95rem;
-    margin-bottom: 1rem;
-  }
+    <label>What you were actually doing</label>
+    <input type="text" placeholder="ex: watched kitten videos for 2 hours..."/>
 
-  button {
-    width: 100%;
-    background-color: #FFE566;
-    color: #0D0D0D;
-    border-radius: 999px;
-    padding: 0.875rem 2rem;
-    border: none;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    margin-top: 0.5rem;
-  }
-           label {
-  display: block;
-  font-size: 0.75rem;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 6px;
-}
-           .honte {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 1rem;
-}
-.dot {
-  width: 44px;
-  height: 44px;
-  background-color: #252525;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #888;
-  font-weight: 700;
-}
-.dot {
-  width: 44px;
-  height: 44px;
-  background-color: #252525;
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #F5F0E8;
-  font-weight: 700;
-  font-size: 1rem;
-}
-      .divider {
-  border: none;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  margin: 1rem 0;
-}
-</style>
-        <meta charset="UTF-8">
-    <title>ProcrastiMap</title>  
-  </head>
-  <body>
-      <div class="carte">
-          <label>
-<h1>  How have you procrastinated? 😬</h1></label>
-<p>Come on, we won't judge. okay, maybe a little.</p>
-<select>
-   <label> <option value="">-- Country --</option></label>
-  <option>🇩🇿 Algeria</option>
-  <option>🇩🇪 Germany</option>
-  <option>🇦🇷 Argentina</option>
-  <option>🇦🇺 Australia</option>
-  <option>🇧🇪 Belgium</option>
-  <option>🇧🇷 Brazil</option>
-  <option>🇨🇦 Canada</option>
-  <option>🇨🇳 China</option>
-  <option>🇰🇷 South Korea</option>
-  <option>🇪🇸 Spain</option>
-  <option>🇺🇸 USA</option>
-  <option>🇫🇷 France</option>
-  <option>🇬🇧 United Kingdom</option>
-  <option>🇮🇳 India</option>
-  <option>🇮🇩 Indonesia</option>
-  <option>🇮🇹 Italia</option>
-  <option>🇯🇵 Japan</option>
-  <option>🇲🇦 Marocco</option>
-  <option>🇲🇽 Mexico</option>
-  <option>🇳🇬 Nigeria</option>
-  <option>🇳🇴 Norway</option>
-  <option>🇳🇿 New-Zealand</option>
-  <option>🇵🇰 Pakistan</option>
-  <option>🇳🇱 Netherlands</option>
-  <option>🇵🇭 Philippin</option>
-  <option>🇵🇹 Portugal</option>
-  <option>🇸🇪 Sweden</option>
-  <option>🇨🇭 Switzerland</option>
-  <option>🇹🇷 Turkey</option>
-  <option>🇺🇦 Ukraine</option>
-  <option>🇻🇳 Vietnam</option>
-</select>
-<input type="text" placeholder="ex : watched kitten tikt tok"/>
-             <label>Shame level</label>
-          <div class="honte">
-  <div class="dot" onclick="setHonte(1)">1</div>
-  <div class="dot" onclick="setHonte(2)">2</div>
-  <div class="dot" onclick="setHonte(3)">3</div>
-  <div class="dot" onclick="setHonte(4)">4</div>
-  <div class="dot" onclick="setHonte(5)">5</div>
-</div>
-<button>Confess your procrastination 🙈</button>
-      </div>
+    <label>Shame level</label>
+    <div class="honte">
+      <div class="dot" onclick="setHonte(1)">1</div>
+      <div class="dot" onclick="setHonte(2)">2</div>
+      <div class="dot" onclick="setHonte(3)">3</div>
+      <div class="dot" onclick="setHonte(4)">4</div>
+      <div class="dot" onclick="setHonte(5)">5</div>
+    </div>
+
+    <hr class="divider">
+
+    <button>Confess your procrastination 🙈</button>
+  </div>
+
+  <script>
+    function setHonte(niveau) {
+      const dots = document.querySelectorAll('.dot');
+      dots.forEach((dot, index) => {
+        if (index < niveau) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+  </script>
 </body>
 </html>
