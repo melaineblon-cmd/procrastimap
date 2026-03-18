@@ -3,6 +3,18 @@
     <head>
         <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
        <style>
+           <script>
+  function setHonte(niveau) {
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((dot, index) => {
+      if (index < niveau) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+</script>
   body {
     background-color: #0D0D0D;
     color: #F5F0E8;
@@ -65,6 +77,29 @@
   letter-spacing: 0.08em;
   margin-bottom: 6px;
 }
+           .honte {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.dot {
+  width: 44px;
+  height: 44px;
+  background-color: #252525;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #888;
+  font-weight: 700;
+}
+.dot.active {
+  background-color: #FFE566;
+  color: #0D0D0D;
+  border-color: #FFE566;
+}
 </style>
         <meta charset="UTF-8">
     <title>ProcrastiMap</title>  
@@ -110,6 +145,14 @@
 </select>
 <input type="text" placeholder="ex : watched kitten tikt tok"/>
 <button>Confess your procrastination 🙈</button>
+          <label>Shame level</label>
+<div class="honte">
+  <div class="dot" onclick="setHonte(1)">1</div>
+  <div class="dot" onclick="setHonte(2)">2</div>
+  <div class="dot" onclick="setHonte(3)">3</div>
+  <div class="dot" onclick="setHonte(4)">4</div>
+  <div class="dot" onclick="setHonte(5)">5</div>
+</div>
       </div>
 </body>
 </html>
