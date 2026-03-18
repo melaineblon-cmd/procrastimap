@@ -95,10 +95,24 @@
   color: #888;
   font-weight: 700;
 }
-.dot.active {
-  background-color: #FFE566;
-  color: #0D0D0D;
-  border-color: #FFE566;
+.dot {
+  width: 44px;
+  height: 44px;
+  background-color: #252525;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #F5F0E8;
+  font-weight: 700;
+  font-size: 1rem;
+}
+      .divider {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  margin: 1rem 0;
 }
 </style>
         <meta charset="UTF-8">
@@ -144,15 +158,15 @@
   <option>🇻🇳 Vietnam</option>
 </select>
 <input type="text" placeholder="ex : watched kitten tikt tok"/>
-<button>Confess your procrastination 🙈</button>
-          <label>Shame level</label>
-<div class="honte">
+             <label>Shame level</label>
+          <div class="honte">
   <div class="dot" onclick="setHonte(1)">1</div>
   <div class="dot" onclick="setHonte(2)">2</div>
   <div class="dot" onclick="setHonte(3)">3</div>
   <div class="dot" onclick="setHonte(4)">4</div>
   <div class="dot" onclick="setHonte(5)">5</div>
 </div>
+<button>Confess your procrastination 🙈</button>
       </div>
 </body>
 </html>
