@@ -4,6 +4,50 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
   <meta charset="UTF-8">
   <title>ProcrastiMap</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabase = window.supabase.createClient(
+    'https://mdxgznjcokuxjdkzbias.supabase.co',
+    'sb_publishable_gNg5Ac1Ff6FDILMl8lXPFw_KRmMUQGR'
+  )
+
+  function setHonte(niveau) {
+    window.shameLevel = niveau;
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((dot, index) => {
+      if (index < niveau) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+
+  async function confess() {
+    const country = document.querySelector('select').value;
+    const activity = document.querySelector('input').value;
+    const shame = window.shameLevel || 0;
+
+    if (!country || !activity || !shame) {
+      alert('Fill in all fields and pick a shame level! 😅');
+      return;
+    }
+
+    const { error } = await supabase
+      .from('procrastinations')
+      .insert({ country, activity, shame_level: shame });
+
+    if (error) {
+      alert('Something went wrong 😬');
+      console.error(error);
+    } else {
+      alert('Confession logged! 🙈');
+      document.querySelector('select').value = '';
+      document.querySelector('input').value = '';
+      setHonte(0);
+    }
+  }
+</script>
   <style>
     body {
       background-color: #0D0D0D;
@@ -147,7 +191,7 @@
 
     <hr class="divider">
 
-    <button>Confess your procrastination 🙈</button>
+    <button onclick="confess()">Confess your procrastination 🙈</button>
   </div>
 
   <script>
