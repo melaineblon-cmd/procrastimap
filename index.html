@@ -90,6 +90,55 @@
       cursor: pointer;
       margin-top: 0.5rem;
     }
+    .feed {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 2rem;
+}
+
+.feed h2 {
+  font-family: 'Syne', sans-serif;
+  color: #FFE566;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.confession-item {
+  background-color: #1A1A1A;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.confession-country {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+}
+
+.confession-activity {
+  font-size: 0.95rem;
+  color: #F5F0E8;
+  margin-bottom: 0.5rem;
+}
+
+.confession-shame {
+  display: flex;
+  gap: 3px;
+}
+
+.shame-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: #FFE566;
+}
+
+.shame-dot.off {
+  background: #252525;
+}
   </style>
 </head>
 <body>
@@ -144,7 +193,10 @@
       <div class="dot" onclick="setHonte(4)">4</div>
       <div class="dot" onclick="setHonte(5)">5</div>
     </div>
-
+<div class="feed">
+  <h2>Latest confessions 🌍</h2>
+  <div id="confessions-list">Loading...</div>
+</div>
     <hr class="divider">
 
     <button onclick="confess()">Confess your procrastination 🙈</button>
@@ -193,8 +245,33 @@
         document.querySelector('select').value = '';
         document.querySelector('input').value = '';
         setHonte(0);
+        loadConfessions();
       }
     }
+    async function loadConfessions() {
+  const { data, error } = await db
+    .from('procrastinations')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+  if (error) { console.error(error); return; }
+
+  const list = document.getElementById('confessions-list');
+  list.innerHTML = data.map(c => `
+    <div class="confession-item">
+      <div class="confession-country">${c.country}</div>
+      <div class="confession-activity">${c.activity}</div>
+      <div class="confession-shame">
+        ${[1,2,3,4,5].map(i =>
+          `<div class="shame-dot${i > c.shame_level ? ' off' : ''}"></div>`
+        ).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+loadConfessions();
   </script>
 </body>
 </html>
