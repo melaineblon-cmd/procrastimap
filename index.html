@@ -311,6 +311,22 @@
         .limit(20);
       if (error) { console.error(error); return; }
       const list = document.getElementById('confessions-list');
+      function updatePile(total) {
+  const pile = document.getElementById('pile');
+  document.getElementById('pile-counter').textContent = total + ' confessions worldwide 🌍';
+  const nbDossiers = Math.min(Math.ceil(total / 2), 20);
+  pile.innerHTML = '';
+  for (let i = 0; i < nbDossiers; i++) {
+    const d = document.createElement('div');
+    d.className = 'dossier';
+    const width = 120 + Math.random() * 80;
+    const rotate = (Math.random() - 0.5) * 8;
+    d.style.width = width + 'px';
+    d.style.transform = `rotate(${rotate}deg)`;
+    d.style.opacity = 0.5 + (i / nbDossiers) * 0.5;
+    pile.appendChild(d);
+  }
+}
       list.innerHTML = data.map(c => `
         <div class="confession-item">
           <div class="confession-country">${c.country}</div>
@@ -332,6 +348,7 @@
     'https://mdxgznjcokuxjdkzbias.supabase.co',
     'sb_publishable_gNg5Ac1Ff6FDILMl8lXPFw_KRmMUQGR'
   );
+  updatePile(data.length);
 
   let shameLevel = 0;
 
