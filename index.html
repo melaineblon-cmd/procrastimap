@@ -165,65 +165,69 @@
 </head>
 <body>
   <div class="layout">
+
     <div class="carte">
-    <h1>How have you procrastinated? 😬</h1>
-    <p>Come on, we won't judge. okay, maybe a little.</p>
+      <h1>How have you procrastinated? 😬</h1>
+      <p>Come on, we won't judge. okay, maybe a little.</p>
 
-    <label>Country</label>
-    <select>
-      <option value="">-- Country --</option>
-      <option>🇩🇿 Algeria</option>
-      <option>🇩🇪 Germany</option>
-      <option>🇦🇷 Argentina</option>
-      <option>🇦🇺 Australia</option>
-      <option>🇧🇪 Belgium</option>
-      <option>🇧🇷 Brazil</option>
-      <option>🇨🇦 Canada</option>
-      <option>🇨🇳 China</option>
-      <option>🇰🇷 South Korea</option>
-      <option>🇪🇸 Spain</option>
-      <option>🇺🇸 USA</option>
-      <option>🇫🇷 France</option>
-      <option>🇬🇧 United Kingdom</option>
-      <option>🇮🇳 India</option>
-      <option>🇮🇩 Indonesia</option>
-      <option>🇮🇹 Italy</option>
-      <option>🇯🇵 Japan</option>
-      <option>🇲🇦 Morocco</option>
-      <option>🇲🇽 Mexico</option>
-      <option>🇳🇬 Nigeria</option>
-      <option>🇳🇴 Norway</option>
-      <option>🇳🇿 New Zealand</option>
-      <option>🇵🇰 Pakistan</option>
-      <option>🇳🇱 Netherlands</option>
-      <option>🇵🇭 Philippines</option>
-      <option>🇵🇹 Portugal</option>
-      <option>🇸🇪 Sweden</option>
-      <option>🇨🇭 Switzerland</option>
-      <option>🇹🇷 Turkey</option>
-      <option>🇺🇦 Ukraine</option>
-      <option>🇻🇳 Vietnam</option>
-    </select>
+      <label>Country</label>
+      <select>
+        <option value="">-- Country --</option>
+        <option>🇩🇿 Algeria</option>
+        <option>🇩🇪 Germany</option>
+        <option>🇦🇷 Argentina</option>
+        <option>🇦🇺 Australia</option>
+        <option>🇧🇪 Belgium</option>
+        <option>🇧🇷 Brazil</option>
+        <option>🇨🇦 Canada</option>
+        <option>🇨🇳 China</option>
+        <option>🇰🇷 South Korea</option>
+        <option>🇪🇸 Spain</option>
+        <option>🇺🇸 USA</option>
+        <option>🇫🇷 France</option>
+        <option>🇬🇧 United Kingdom</option>
+        <option>🇮🇳 India</option>
+        <option>🇮🇩 Indonesia</option>
+        <option>🇮🇹 Italy</option>
+        <option>🇯🇵 Japan</option>
+        <option>🇲🇦 Morocco</option>
+        <option>🇲🇽 Mexico</option>
+        <option>🇳🇬 Nigeria</option>
+        <option>🇳🇴 Norway</option>
+        <option>🇳🇿 New Zealand</option>
+        <option>🇵🇰 Pakistan</option>
+        <option>🇳🇱 Netherlands</option>
+        <option>🇵🇭 Philippines</option>
+        <option>🇵🇹 Portugal</option>
+        <option>🇸🇪 Sweden</option>
+        <option>🇨🇭 Switzerland</option>
+        <option>🇹🇷 Turkey</option>
+        <option>🇺🇦 Ukraine</option>
+        <option>🇻🇳 Vietnam</option>
+      </select>
 
-    <label>What you were actually doing</label>
-    <input type="text" placeholder="ex: watched kitten videos for 2 hours..."/>
+      <label>What you were actually doing</label>
+      <input type="text" placeholder="ex: watched kitten videos for 2 hours..."/>
 
-    <label>Shame level</label>
-    <div class="honte">
-      <div class="dot" onclick="setHonte(1)">1</div>
-      <div class="dot" onclick="setHonte(2)">2</div>
-      <div class="dot" onclick="setHonte(3)">3</div>
-      <div class="dot" onclick="setHonte(4)">4</div>
-      <div class="dot" onclick="setHonte(5)">5</div>
-       </div>
+      <label>Shame level</label>
+      <div class="honte">
+        <div class="dot" onclick="setHonte(1)">1</div>
+        <div class="dot" onclick="setHonte(2)">2</div>
+        <div class="dot" onclick="setHonte(3)">3</div>
+        <div class="dot" onclick="setHonte(4)">4</div>
+        <div class="dot" onclick="setHonte(5)">5</div>
+      </div>
+
+      <hr class="divider">
+
+      <button onclick="confess()">Confess your procrastination 🙈</button>
+    </div>
+
     <div class="feed">
       <h2>Latest confessions 🌍</h2>
       <div id="confessions-list">Loading...</div>
     </div>
-  </div>
-    <hr class="divider">
 
-    <button onclick="confess()">Confess your procrastination 🙈</button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -251,16 +255,13 @@
     async function confess() {
       const country = document.querySelector('select').value;
       const activity = document.querySelector('input').value;
-
       if (!country || !activity || !shameLevel) {
         alert('Fill in all fields and pick a shame level! 😅');
         return;
       }
-
       const { error } = await db
         .from('procrastinations')
         .insert({ country, activity, shame_level: shameLevel });
-
       if (error) {
         alert('Something went wrong 😬');
         console.error(error);
@@ -272,30 +273,29 @@
         loadConfessions();
       }
     }
+
     async function loadConfessions() {
-  const { data, error } = await db
-    .from('procrastinations')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(20);
+      const { data, error } = await db
+        .from('procrastinations')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(20);
+      if (error) { console.error(error); return; }
+      const list = document.getElementById('confessions-list');
+      list.innerHTML = data.map(c => `
+        <div class="confession-item">
+          <div class="confession-country">${c.country}</div>
+          <div class="confession-activity">${c.activity}</div>
+          <div class="confession-shame">
+            ${[1,2,3,4,5].map(i =>
+              `<div class="shame-dot${i > c.shame_level ? ' off' : ''}"></div>`
+            ).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
 
-  if (error) { console.error(error); return; }
-
-  const list = document.getElementById('confessions-list');
-  list.innerHTML = data.map(c => `
-    <div class="confession-item">
-      <div class="confession-country">${c.country}</div>
-      <div class="confession-activity">${c.activity}</div>
-      <div class="confession-shame">
-        ${[1,2,3,4,5].map(i =>
-          `<div class="shame-dot${i > c.shame_level ? ' off' : ''}"></div>`
-        ).join('')}
-      </div>
-    </div>
-  `).join('');
-}
-
-loadConfessions();
+    loadConfessions();
   </script>
 </body>
 </html>
