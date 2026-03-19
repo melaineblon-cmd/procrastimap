@@ -99,6 +99,25 @@
       border-radius: 999px; padding: 0.75rem 2rem;
       font-weight: 700; cursor: pointer; width: auto;
     }
+    .share-btns {
+  display: flex;
+  gap: 8px;
+  margin-top: 0.75rem;
+}
+.share-btns a {
+  font-size: 0.75rem;
+  color: #888;
+  text-decoration: none;
+  background: #252525;
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: color 0.2s, border-color 0.2s;
+}
+.share-btns a:hover {
+  color: #FFE566;
+  border-color: #FFE566;
+}
   </style>
 </head>
 <body>
@@ -252,6 +271,22 @@
     }
 
     loadConfessions();
+    list.innerHTML = data.map(c => `
+  <div class="confession-item">
+    <div class="confession-country">${c.country}</div>
+    <div class="confession-activity">${c.activity}</div>
+    <div class="confession-shame">
+      ${[1,2,3,4,5].map(i =>
+        `<div class="shame-dot${i > c.shame_level ? ' off' : ''}"></div>`
+      ).join('')}
+    </div>
+    <div class="share-btns">
+      <a href="https://twitter.com/intent/tweet?text=I%20just%20confessed%20my%20procrastination%20on%20ProcrastiMap%20%F0%9F%99%88%20${encodeURIComponent(c.activity)}%20-%20procrastimap.vercel.app" target="_blank">𝕏</a>
+      <a href="https://wa.me/?text=${encodeURIComponent('I confessed my procrastination 🙈 ' + c.activity + ' - procrastimap.vercel.app')}" target="_blank">WhatsApp</a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=procrastimap.vercel.app" target="_blank">Facebook</a>
+    </div>
+  </div>
+`).join('');
   </script>
 </body>
 </html>
