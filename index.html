@@ -7,20 +7,41 @@
   <title>ProcrastiMap</title>
   <style>
     body {
-      background-color: #0D0D0D;
-      color: #F5F0E8;
-      font-family: 'DM Sans', sans-serif;
-      display: flex;
-      justify-content: center;
-      padding: 3rem 1rem;
-    }
-    .carte {
-      background-color: #1A1A1A;
-      border-radius: 20px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 420px;
-    }
+  background-color: #0D0D0D;
+  color: #F5F0E8;
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.carte {
+  background-color: #1A1A1A;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+}
+
+.feed {
+  background-color: #1A1A1A;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+}
     h1 {
       color: #FFE566;
       font-family: 'Syne', sans-serif;
@@ -143,7 +164,8 @@
   </style>
 </head>
 <body>
-  <div class="carte">
+  <div class="layout">
+    <div class="carte">
     <h1>How have you procrastinated? 😬</h1>
     <p>Come on, we won't judge. okay, maybe a little.</p>
 
@@ -193,11 +215,12 @@
       <div class="dot" onclick="setHonte(3)">3</div>
       <div class="dot" onclick="setHonte(4)">4</div>
       <div class="dot" onclick="setHonte(5)">5</div>
+       </div>
+    <div class="feed">
+      <h2>Latest confessions 🌍</h2>
+      <div id="confessions-list">Loading...</div>
     </div>
-<div class="feed">
-  <h2>Latest confessions 🌍</h2>
-  <div id="confessions-list">Loading...</div>
-</div>
+  </div>
     <hr class="divider">
 
     <button onclick="confess()">Confess your procrastination 🙈</button>
