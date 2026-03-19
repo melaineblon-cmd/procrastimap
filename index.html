@@ -271,32 +271,88 @@
     }
 
    async function loadConfessions() {
-  const { data, error } = await db
-    .from('procrastinations')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(20);
-  if (error) { console.error(error); return; }
-  const list = document.getElementById('confessions-list');
-  list.innerHTML = data.map(c => `
-    <div class="confession-item">
-      <div class="confession-country">${c.country}</div>
-      <div class="confession-activity">${c.activity}</div>
-      <div class="confession-shame">
-        ${[1,2,3,4,5].map(i =>
-          `<div class="shame-dot${i > c.shame_level ? ' off' : ''}"></div>`
-        ).join('')}
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const { createClient } = supabase;
+  const db = createClient(
+    'https://mdxgznjcokuxjdkzbias.supabase.co',
+    'sb_publishable_gNg5Ac1Ff6FDILMl8lXPFw_KRmMUQGR'
+  );
+
+  let shameLevel = 0;
+
+  const messages = [
+    { emoji: '🙈', title: 'Confession logged!', sub: 'The world now knows. No going back.' },
+    { emoji: '😳', title: 'Oh wow. Really?', sub: 'That\'s a new low. We respect it.' },
+    { emoji: '💀', title: 'This one is bad.', sub: 'Like... really bad. We\'re judging you.' },
+    { emoji: '😂', title: 'Classic.', sub: 'You\'re not alone. Unfortunately.' },
+    { emoji: '🏆', title: 'Procrastinator of the day?', sub: 'This might be peak laziness. Congrats.' },
+  ];
+
+  function setHonte(niveau) {
+    shameLevel = niveau;
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+      dot.classList.toggle('active', index < niveau);
+    });
+  }
+
+  function closePopup() {
+    document.getElementById('popup').classList.remove('visible');
+  }
+
+  async function confess() {
+    const country = document.querySelector('select').value;
+    const activity = document.querySelector('input').value;
+    if (!country || !activity || !shameLevel) {
+      alert('Fill in all fields and pick a shame level! 😅');
+      return;
+    }
+    const { error } = await db
+      .from('procrastinations')
+      .insert({ country, activity, shame_level: shameLevel });
+    if (error) {
+      alert('Something went wrong 😬');
+      console.error(error);
+    } else {
+      const msg = messages[Math.floor(Math.random() * messages.length)];
+      document.querySelector('.popup-emoji').textContent = msg.emoji;
+      document.querySelector('.popup-title').textContent = msg.title;
+      document.querySelector('.popup-sub').textContent = msg.sub;
+      document.getElementById('popup').classList.add('visible');
+      document.querySelector('select').value = '';
+      document.querySelector('input').value = '';
+      setHonte(0);
+      loadConfessions();
+    }
+  }
+
+  async function loadConfessions() {
+    const { data, error } = await db
+      .from('procrastinations')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(20);
+    if (error) { console.error(error); return; }
+    const list = document.getElementById('confessions-list');
+    list.innerHTML = data.map(c => `
+      <div class="confession-item">
+        <div class="confession-country">${c.country}</div>
+        <div class="confession-activity">${c.activity}</div>
+        <div class="confession-shame">
+          ${[1,2,3,4,5].map(i =>
+            `<div class="shame-dot${i > c.shame_level ? ' off' : ''}"></div>`
+          ).join('')}
+        </div>
+        <div class="share-btns">
+          <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent('I just procrastinated: ' + c.activity + ' 🙈 procrastimap.vercel.app')}" target="_blank">𝕏</a>
+          <a href="https://wa.me/?text=${encodeURIComponent('I confessed my procrastination 🙈 ' + c.activity + ' - procrastimap.vercel.app')}" target="_blank">WhatsApp</a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://procrastimap.vercel.app" target="_blank">Facebook</a>
+        </div>
       </div>
-      <div class="share-btns">
-        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent('I just procrastinated: ' + c.activity + ' 🙈 procrastimap.vercel.app')}" target="_blank">𝕏</a>
-        <a href="https://wa.me/?text=${encodeURIComponent('I confessed my procrastination 🙈 ' + c.activity + ' - procrastimap.vercel.app')}" target="_blank">WhatsApp</a>
-        <a href="https://www.facebook.com/sharer/sharer.php?u=https://procrastimap.vercel.app" target="_blank">Facebook</a>
-      </div>
-    </div>
-  `).join('');
-}
-  </div>
-`).join('');
-  </script>
+    `).join('');
+  }
+
+  loadConfessions();
+</script>
 </body>
 </html>
