@@ -353,7 +353,19 @@
 
     loadConfessions();
     function closePopup() {
-  document.getElementById('popup').classList.remove('visible');
+  const messages = [
+  { emoji: '🙈', title: 'Confession logged!', sub: 'The world now knows. No going back.' },
+  { emoji: '😳', title: 'Oh wow. Really?', sub: 'That\'s a new low. We respect it.' },
+  { emoji: '💀', title: 'This one is bad.', sub: 'Like... really bad. We\'re judging you.' },
+  { emoji: '😂', title: 'Classic.', sub: 'You\'re not alone. Unfortunately.' },
+  { emoji: '🏆', title: 'Procrastinator of the day?', sub: 'This might be peak laziness. Congrats.' },
+];
+
+const msg = messages[Math.floor(Math.random() * messages.length)];
+document.querySelector('.popup-emoji').textContent = msg.emoji;
+document.querySelector('.popup-title').textContent = msg.title;
+document.querySelector('.popup-sub').textContent = msg.sub;
+document.getElementById('popup').classList.add('visible');
 }
   </script>
 </body>
