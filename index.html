@@ -270,21 +270,31 @@
       `).join('');
     }
 
-    loadConfessions();
-    list.innerHTML = data.map(c => `
-  <div class="confession-item">
-    <div class="confession-country">${c.country}</div>
-    <div class="confession-activity">${c.activity}</div>
-    <div class="confession-shame">
-      ${[1,2,3,4,5].map(i =>
-        `<div class="shame-dot${i > c.shame_level ? ' off' : ''}"></div>`
-      ).join('')}
+   async function loadConfessions() {
+  const { data, error } = await db
+    .from('procrastinations')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(20);
+  if (error) { console.error(error); return; }
+  const list = document.getElementById('confessions-list');
+  list.innerHTML = data.map(c => `
+    <div class="confession-item">
+      <div class="confession-country">${c.country}</div>
+      <div class="confession-activity">${c.activity}</div>
+      <div class="confession-shame">
+        ${[1,2,3,4,5].map(i =>
+          `<div class="shame-dot${i > c.shame_level ? ' off' : ''}"></div>`
+        ).join('')}
+      </div>
+      <div class="share-btns">
+        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent('I just procrastinated: ' + c.activity + ' 🙈 procrastimap.vercel.app')}" target="_blank">𝕏</a>
+        <a href="https://wa.me/?text=${encodeURIComponent('I confessed my procrastination 🙈 ' + c.activity + ' - procrastimap.vercel.app')}" target="_blank">WhatsApp</a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://procrastimap.vercel.app" target="_blank">Facebook</a>
+      </div>
     </div>
-    <div class="share-btns">
-      <a href="https://twitter.com/intent/tweet?text=I%20just%20confessed%20my%20procrastination%20on%20ProcrastiMap%20%F0%9F%99%88%20${encodeURIComponent(c.activity)}%20-%20procrastimap.vercel.app" target="_blank">𝕏</a>
-      <a href="https://wa.me/?text=${encodeURIComponent('I confessed my procrastination 🙈 ' + c.activity + ' - procrastimap.vercel.app')}" target="_blank">WhatsApp</a>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=procrastimap.vercel.app" target="_blank">Facebook</a>
-    </div>
+  `).join('');
+}
   </div>
 `).join('');
   </script>
