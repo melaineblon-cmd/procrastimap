@@ -4,51 +4,93 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
   <meta charset="UTF-8">
   <title>ProcrastiMap</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const supabase = window.supabase.createClient(
-    'https://mdxgznjcokuxjdkzbias.supabase.co',
-    'sb_publishable_gNg5Ac1Ff6FDILMl8lXPFw_KRmMUQGR'
-  )
-
-  function setHonte(niveau) {
-    window.shameLevel = niveau;
-    const dots = document.querySelectorAll('.dot');
-    dots.forEach((dot, index) => {
-      if (index < niveau) {
-        dot.classList.add('active');
-      } else {
-        dot.classList.remove('active');
-      }
-    });
-  }
-
-  async function confess() {
-    const country = document.querySelector('select').value;
-    const activity = document.querySelector('input').value;
-    const shame = window.shameLevel || 0;
-
-    if (!country || !activity || !shame) {
-      alert('Fill in all fields and pick a shame level! 😅');
-      return;
+  <style>
+    body {
+      background-color: #0D0D0D;
+      color: #F5F0E8;
+      font-family: 'DM Sans', sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 3rem 1rem;
     }
-
-    const { error } = await supabase
-      .from('procrastinations')
-      .insert({ country, activity, shame_level: shame });
-
-    if (error) {
-      alert('Something went wrong 😬');
-      console.error(error);
-    } else {
-      alert('Confession logged! 🙈');
-      document.querySelector('select').value = '';
-      document.querySelector('input').value = '';
-      setHonte(0);
+    .carte {
+      background-color: #1A1A1A;
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 420px;
     }
-  }
-</script>
-</style>
+    h1 {
+      color: #FFE566;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      margin-bottom: 0.25rem;
+    }
+    p {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      font-size: 0.75rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    select, input {
+      width: 100%;
+      background-color: #252525;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: #F5F0E8;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    .honte {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+    .dot {
+      width: 44px;
+      height: 44px;
+      background-color: #252525;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #F5F0E8;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .dot.active {
+      background-color: #FFE566;
+      color: #0D0D0D;
+      border-color: #FFE566;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin: 1rem 0;
+    }
+    button {
+      width: 100%;
+      background-color: #FFE566;
+      color: #0D0D0D;
+      border-radius: 999px;
+      padding: 0.875rem 2rem;
+      border: none;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+  </style>
 </head>
 <body>
   <div class="carte">
