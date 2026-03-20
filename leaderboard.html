@@ -205,22 +205,17 @@
         .sort((a, b) => b[1].count - a[1].count);
       const maxCount = sorted[0]?.[1].count || 1;
 
-      document.getElementById('top-countries').innerHTML = sorted
-        .slice(0, 8)
-        .map(([name, data], i) => `
-          <div class="rank-item">
-            <div class="rank-number ${rankColor(i)}">${i + 1}</div>
-            <div style="flex:1">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div class="rank-name">${name}</div>
-                <div class="rank-value">${data.count}</div>
-              </div>
-              <div class="rank-bar">
-                <div class="rank-bar-fill" style="width:${(data.count / maxCount * 100).toFixed(0)}%"></div>
-              </div>
-            </div>
-          </div>
-        `).join('');
+      document.getElementById('shame-countries').innerHTML = shamed
+  .slice(0, 8)
+  .map(item => `
+    <div class="shame-bar-item">
+      <div class="shame-bar-label">${item.name}</div>
+      <div class="shame-bar-track">
+        <div class="shame-bar-fill" style="width:${(item.avg / 5 * 100).toFixed(0)}%"></div>
+      </div>
+      <div class="shame-bar-value">${item.avg}/5</div>
+    </div>
+  `).join('');
 
       const shamed = Object.entries(byCountry)
         .filter(([_, d]) => d.count >= 1)
