@@ -24,12 +24,18 @@
       .layout { grid-template-columns: 1fr 1fr; align-items: start; }
     }
     .carte {
-  background-color: #1A1A1A;
-  border-radius: 20px;
-  padding: 2rem;
-  width: 100%;
-  position: relative;
-}
+      background-color: #1A1A1A;
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    .feed {
+      background-color: #1A1A1A;
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
     }
     h1 {
       color: #FFE566;
@@ -121,20 +127,20 @@
       margin-bottom: 0; width: auto; padding: 0; cursor: pointer;
     }
     .pile-wrapper {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  pointer-events: none;
-}
-.pile-counter {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.75rem;
-  color: #FFE566;
-  text-align: right;
-  padding-right: 0.75rem;
-  margin-bottom: 0;
-  opacity: 0.7;
-}
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      pointer-events: none;
+    }
+    .pile-counter {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      color: #FFE566;
+      text-align: center;
+      margin-bottom: 0;
+      opacity: 0.7;
+      padding: 4px 8px;
+    }
   </style>
 </head>
 <body>
@@ -145,11 +151,6 @@
     <div class="carte">
       <h1>How have you procrastinated? 😬</h1>
       <p>Come on, we won't judge. okay, maybe a little.</p>
-
-      <div class="pile-wrapper">
-        <div id="pile-counter" class="pile-counter">0 confessions worldwide</div>
-        <canvas id="pile-canvas" width="180" height="230" style="display:block;"></canvas>
-      </div>
 
       <label>Country</label>
       <select>
@@ -201,6 +202,11 @@
 
       <hr class="divider">
       <button onclick="confess()">Confess your procrastination 🙈</button>
+
+      <div class="pile-wrapper">
+        <div id="pile-counter" class="pile-counter"></div>
+        <canvas id="pile-canvas" width="160" height="180" style="display:block;"></canvas>
+      </div>
     </div>
 
     <div class="feed">
@@ -245,10 +251,10 @@
     ];
 
     function updatePile(n) {
-      document.getElementById('pile-counter').textContent = n + ' confessions worldwide 🌍';
+      document.getElementById('pile-counter').textContent = n + ' confessions 🌍';
       const canvas = document.getElementById('pile-canvas');
       const ctx = canvas.getContext('2d');
-      const W = 180, H = 230;
+      const W = 160, H = 180;
       ctx.clearRect(0, 0, W, H);
       const nb = Math.min(Math.ceil(n / 3), 22);
       if (nb === 0) return;
@@ -294,8 +300,8 @@
         }
         ctx.restore();
       }
-      const baseW = 140, sheetH = 9, gap = 1;
-      const baseY = H - 20, cx = W / 2 - 10;
+      const baseW = 130, sheetH = 9, gap = 1;
+      const baseY = H - 10, cx = W / 2;
       for (let i = 0; i < nb; i++) {
         const tilt = (seededRand(i, 3) - 0.5) * 0.08;
         const xOff = (seededRand(i, 4) - 0.5) * 12;
