@@ -23,11 +23,13 @@
     @media (min-width: 768px) {
       .layout { grid-template-columns: 1fr 1fr; align-items: start; }
     }
-    .carte, .feed {
-      background-color: #1A1A1A;
-      border-radius: 20px;
-      padding: 2rem;
-      width: 100%;
+    .carte {
+  background-color: #1A1A1A;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  position: relative;
+}
     }
     h1 {
       color: #FFE566;
@@ -118,8 +120,21 @@
       font-size: 0.9rem; font-weight: 700; font-family: 'Syne', sans-serif;
       margin-bottom: 0; width: auto; padding: 0; cursor: pointer;
     }
-    .pile-wrapper { text-align: center; margin-bottom: 1.5rem; }
-    .pile-counter { font-family: 'Syne', sans-serif; font-size: 1rem; color: #FFE566; margin-bottom: 0.5rem; }
+    .pile-wrapper {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  pointer-events: none;
+}
+.pile-counter {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem;
+  color: #FFE566;
+  text-align: right;
+  padding-right: 0.75rem;
+  margin-bottom: 0;
+  opacity: 0.7;
+}
   </style>
 </head>
 <body>
@@ -133,7 +148,7 @@
 
       <div class="pile-wrapper">
         <div id="pile-counter" class="pile-counter">0 confessions worldwide</div>
-        <canvas id="pile-canvas" width="180" height="230" style="display:block; margin: 0 auto;"></canvas>
+        <canvas id="pile-canvas" width="180" height="230" style="display:block;"></canvas>
       </div>
 
       <label>Country</label>
