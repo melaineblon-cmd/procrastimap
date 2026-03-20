@@ -141,6 +141,28 @@
       opacity: 0.7;
       padding: 4px 8px;
     }
+    .reactions {
+  display: flex;
+  gap: 8px;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.reaction-btn {
+  background: #252525;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 99px;
+  padding: 4px 12px;
+  color: #F5F0E8;
+  font-size: 0.85rem;
+  cursor: pointer;
+  width: auto;
+  margin-top: 0;
+  transition: background 0.15s, border-color 0.15s;
+}
+.reaction-btn:hover {
+  background: #333;
+  border-color: #FFE566;
+}
   </style>
 </head>
 <body>
@@ -342,6 +364,14 @@
     function closePopup() {
       document.getElementById('popup').classList.remove('visible');
     }
+    async function vote(confessionId, emoji) {
+  const { error } = await db
+    .from('votes')
+    .insert({ confession_id: confessionId, emoji });
+  if (error) { console.error(error); return; }
+  const el = document.getElementById(emoji + '-' + confessionId);
+  if (el) el.textContent = parseInt(el.textContent) + 1;
+}
 
     async function confess() {
       const country = document.querySelector('select').value;
@@ -396,7 +426,45 @@
       `).join('');
     }
 
-    loadConfessions();
+    async function loadConfessions() {
+  const { data, error } = await db
+    .from('procrastinations')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(20);
+  if (error) { console.error(error); return; }
+  updatePile(data.length);
+
+  const { data: votes } = await db.from('votes').select('*');
+
+  const list = document.getElementById('confessions-list');
+  list.innerHTML = data.map(c => {
+    const lol = votes.filter(v => v.confession_id === c.id && v.emoji === 'lol').length;
+    const noway = votes.filter(v => v.confession_id === c.id && v.emoji === 'noway').length;
+    const relatable = votes.filter(v => v.confession_id === c.id && v.emoji === 'relatable').length;
+    return `
+      <div class="confession-item">
+        <div class="confession-country">${c.country}</div>
+        <div class="confession-activity">${c.activity}</div>
+        <div class="confession-shame">
+          ${[1,2,3,4,5].map(i =>
+            `<div class="shame-dot${i > c.shame_level ? ' off' : ''}"></div>`
+          ).join('')}
+        </div>
+        <div class="reactions">
+          <button class="reaction-btn" onclick="vote('${c.id}', 'lol')">😂 <span id="lol-${c.id}">${lol}</span></button>
+          <button class="reaction-btn" onclick="vote('${c.id}', 'noway')">😱 <span id="noway-${c.id}">${noway}</span></button>
+          <button class="reaction-btn" onclick="vote('${c.id}', 'relatable')">😳 <span id="relatable-${c.id}">${relatable}</span></button>
+        </div>
+        <div class="share-btns">
+          <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent('I just procrastinated: ' + c.activity + ' 🙈 procrastimap.vercel.app')}" target="_blank">𝕏</a>
+          <a href="https://wa.me/?text=${encodeURIComponent('I confessed my procrastination 🙈 ' + c.activity + ' - procrastimap.vercel.app')}" target="_blank">WhatsApp</a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://procrastimap.vercel.app" target="_blank">Facebook</a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
   </script>
   <div id="pile-wrapper" style="position: fixed; bottom: 0; right: 0; pointer-events: none; z-index: 50;">
     <div id="pile-counter" style="font-family: 'Syne', sans-serif; font-size: 0.75rem; color: #FFE566; text-align: center; opacity: 0.7; padding: 4px 8px;"></div>
