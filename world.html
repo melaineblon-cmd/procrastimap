@@ -1,1 +1,208 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProcrastiMap — World</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    body {
+      background-color: #0D0D0D;
+      color: #F5F0E8;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    .layout {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    nav {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    nav a {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 1.1rem;
+    }
+    nav a.active { color: #FFE566; }
+    nav a:not(.active) { color: #888; }
+    h1 {
+      font-family: 'Syne', sans-serif;
+      color: #FFE566;
+      font-size: 1.8rem;
+      margin-bottom: 0.25rem;
+    }
+    p { color: #888; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: #1A1A1A;
+      border-radius: 16px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #FFE566;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 0.25rem;
+    }
+    #map {
+      width: 100%;
+      height: 480px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .leaflet-popup-content-wrapper {
+      background: #1A1A1A;
+      color: #F5F0E8;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      box-shadow: none;
+    }
+    .leaflet-popup-tip { background: #1A1A1A; }
+    .popup-country {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #FFE566;
+      margin-bottom: 0.25rem;
+    }
+    .popup-count { font-size: 0.85rem; color: #888; }
+    .popup-sample { font-size: 0.85rem; color: #F5F0E8; margin-top: 0.5rem; font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <a href="index.html">🙈 Confess</a>
+      <a href="world.html" class="active">🌍 World</a>
+    </nav>
+
+    <h1>Procrastination worldwide 🌍</h1>
+    <p>Every pin is a confession. The world is slacking together.</p>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-number" id="total">—</div>
+        <div class="stat-label">total confessions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="countries">—</div>
+        <div class="stat-label">countries represented</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="top-country">—</div>
+        <div class="stat-label">most procrastinating country</div>
+      </div>
+    </div>
+
+    <div id="map"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const { createClient } = supabase;
+    const db = createClient(
+      'https://mdxgznjcokuxjdkzbias.supabase.co',
+      'sb_publishable_gNg5Ac1Ff6FDILMl8lXPFw_KRmMUQGR'
+    );
+
+    const countryCoords = {
+      'Algeria': [28.0339, 1.6596], 'Germany': [51.1657, 10.4515],
+      'Argentina': [-38.4161, -63.6167], 'Australia': [-25.2744, 133.7751],
+      'Belgium': [50.5039, 4.4699], 'Brazil': [-14.2350, -51.9253],
+      'Canada': [56.1304, -106.3468], 'China': [35.8617, 104.1954],
+      'South Korea': [35.9078, 127.7669], 'Spain': [40.4637, -3.7492],
+      'USA': [37.0902, -95.7129], 'France': [46.2276, 2.2137],
+      'United Kingdom': [55.3781, -3.4360], 'India': [20.5937, 78.9629],
+      'Indonesia': [-0.7893, 113.9213], 'Italy': [41.8719, 12.5674],
+      'Japan': [36.2048, 138.2529], 'Morocco': [31.7917, -7.0926],
+      'Mexico': [23.6345, -102.5528], 'Nigeria': [9.0820, 8.6753],
+      'Norway': [60.4720, 8.4689], 'New Zealand': [-40.9006, 174.8860],
+      'Pakistan': [30.3753, 69.3451], 'Netherlands': [52.1326, 5.2913],
+      'Philippines': [12.8797, 121.7740], 'Portugal': [39.3999, -8.2245],
+      'Sweden': [60.1282, 18.6435], 'Switzerland': [46.8182, 8.2275],
+      'Turkey': [38.9637, 35.2433], 'Ukraine': [48.3794, 31.1656],
+      'Vietnam': [14.0583, 108.2772],
+    };
+
+    const map = L.map('map', {
+      center: [20, 0],
+      zoom: 2,
+      zoomControl: true,
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap © CARTO',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    function getCountryName(raw) {
+      return raw.replace(/^\S+\s+/, '').trim();
+    }
+
+    async function loadWorld() {
+      const { data, error } = await db
+        .from('procrastinations')
+        .select('*');
+      if (error) { console.error(error); return; }
+
+      const byCountry = {};
+      data.forEach(c => {
+        const name = getCountryName(c.country);
+        if (!byCountry[name]) byCountry[name] = [];
+        byCountry[name].push(c.activity);
+      });
+
+      document.getElementById('total').textContent = data.length;
+      document.getElementById('countries').textContent = Object.keys(byCountry).length;
+
+      const topCountry = Object.entries(byCountry)
+        .sort((a, b) => b[1].length - a[1].length)[0];
+      if (topCountry) {
+        document.getElementById('top-country').textContent = topCountry[0];
+      }
+
+      Object.entries(byCountry).forEach(([country, activities]) => {
+        const coords = countryCoords[country];
+        if (!coords) return;
+        const size = Math.min(10 + activities.length * 3, 40);
+        const marker = L.circleMarker(coords, {
+          radius: size,
+          fillColor: '#FFE566',
+          color: '#0D0D0D',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.85,
+        }).addTo(map);
+
+        const sample = activities.slice(0, 3).map(a => `"${a}"`).join('<br>');
+        marker.bindPopup(`
+          <div class="popup-country">${country}</div>
+          <div class="popup-count">${activities.length} confession${activities.length > 1 ? 's' : ''}</div>
+          <div class="popup-sample">${sample}</div>
+        `);
+      });
+    }
+
+    loadWorld();
+  </script>
+</body>
+</html>
