@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProcrastiMap — Leaderboard</title>
+  <style>
+    body {
+      background-color: #0D0D0D;
+      color: #F5F0E8;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    .layout { max-width: 900px; margin: 0 auto; }
+    nav { display: flex; gap: 1rem; margin-bottom: 2rem; }
+    nav a {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 1.1rem;
+      color: #888;
+    }
+    nav a.active { color: #FFE566; }
+    h1 {
+      font-family: 'Syne', sans-serif;
+      color: #FFE566;
+      font-size: 1.8rem;
+      margin-bottom: 0.25rem;
+    }
+    p { color: #888; font-size: 0.9rem; margin-bottom: 2rem; }
+    .sections {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .sections { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: #1A1A1A;
+      border-radius: 20px;
+      padding: 1.5rem;
+    }
+    .card h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      color: #FFE566;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .rank-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .rank-item:last-child { border-bottom: none; }
+    .rank-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #444;
+      min-width: 24px;
+    }
+    .rank-number.gold { color: #FFE566; }
+    .rank-number.silver { color: #C0C0C0; }
+    .rank-number.bronze { color: #CD7F32; }
+    .rank-name {
+      flex: 1;
+      font-size: 0.95rem;
+      color: #F5F0E8;
+    }
+    .rank-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #FFE566;
+    }
+    .rank-bar {
+      height: 4px;
+      background: #252525;
+      border-radius: 2px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .rank-bar-fill {
+      height: 100%;
+      background: #FFE566;
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+    .confession-featured {
+      background: #252525;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .confession-featured:last-child { margin-bottom: 0; }
+    .featured-country { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.25rem; }
+    .featured-activity { font-size: 0.95rem; color: #F5F0E8; margin-bottom: 0.5rem; }
+    .featured-votes { display: flex; gap: 8px; font-size: 0.8rem; color: #888; }
+    .full-width { grid-column: 1 / -1; }
+    .shame-bar-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .shame-bar-label { font-size: 0.85rem; color: #F5F0E8; min-width: 120px; }
+    .shame-bar-track {
+      flex: 1;
+      height: 8px;
+      background: #252525;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .shame-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FFE566, #FF6B35);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    .shame-bar-value { font-size: 0.8rem; color: #888; min-width: 32px; text-align: right; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <a href="index.html">🙈 Confess</a>
+      <a href="world.html">🌍 World</a>
+      <a href="leaderboard.html" class="active">🏆 Leaderboard</a>
+    </nav>
+
+    <h1>Leaderboard 🏆</h1>
+    <p>Who's procrastinating the most? The world's shame, ranked.</p>
+
+    <div class="sections">
+
+      <div class="card">
+        <h2>🌍 Top countries</h2>
+        <div id="top-countries">Loading...</div>
+      </div>
+
+      <div class="card">
+        <h2>🔥 Most shameful countries</h2>
+        <div id="shame-countries">Loading...</div>
+      </div>
+
+      <div class="card full-width">
+        <h2>😂 Most reacted confessions</h2>
+        <div id="top-confessions">Loading...</div>
+      </div>
+
+    </div>
+  </div>
+
+  <a href="https://ko-fi.com/tonpseudo" target="_blank" style="
+    position: fixed; bottom: 1.25rem; left: 1.25rem; z-index: 50;
+    display: flex; align-items: center; gap: 0.5rem;
+    background: #1A1A1A; border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px; padding: 0.6rem 1.1rem;
+    color: #F5F0E8; text-decoration: none;
+    font-size: 0.85rem; font-weight: 500; font-family: 'DM Sans', sans-serif;
+  ">☕ Buy me a coffee</a>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const { createClient } = supabase;
+    const db = createClient(
+      'https://mdxgznjcokuxjdkzbias.supabase.co',
+      'sb_publishable_gNg5Ac1Ff6FDILMl8lXPFw_KRmMUQGR'
+    );
+
+    function getCountryName(raw) {
+      return raw.replace(/^\S+\s+/, '').trim();
+    }
+
+    function rankColor(i) {
+      if (i === 0) return 'gold';
+      if (i === 1) return 'silver';
+      if (i === 2) return 'bronze';
+      return '';
+    }
+
+    async function loadLeaderboard() {
+      const { data: confessions } = await db.from('procrastinations').select('*');
+      const { data: votes } = await db.from('votes').select('*');
+
+      if (!confessions || !votes) return;
+
+      const byCountry = {};
+      confessions.forEach(c => {
+        const name = getCountryName(c.country);
+        if (!byCountry[name]) byCountry[name] = { count: 0, totalShame: 0 };
+        byCountry[name].count++;
+        byCountry[name].totalShame += c.shame_level || 0;
+      });
+
+      const sorted = Object.entries(byCountry)
+        .sort((a, b) => b[1].count - a[1].count);
+      const maxCount = sorted[0]?.[1].count || 1;
+
+      document.getElementById('top-countries').innerHTML = sorted
+        .slice(0, 8)
+        .map(([name, data], i) => `
+          <div class="rank-item">
+            <div class="rank-number ${rankColor(i)}">${i + 1}</div>
+            <div style="flex:1">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="rank-name">${name}</div>
+                <div class="rank-value">${data.count}</div>
+              </div>
+              <div class="rank-bar">
+                <div class="rank-bar-fill" style="width:${(data.count / maxCount * 100).toFixed(0)}%"></div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+
+      const shamed = Object.entries(byCountry)
+        .filter(([_, d]) => d.count >= 1)
+        .map(([name, data]) => ({
+          name,
+          avg: (data.totalShame / data.count).toFixed(1)
+        }))
+        .sort((a, b) => b.avg - a.avg);
+
+      document.getElementById('shame-countries').innerHTML = shamed
+        .slice(0, 8)
+        .map(([_, d], i, arr) => {
+          const item = shamed[i];
+          return `
+            <div class="shame-bar-item">
+              <div class="shame-bar-label">${item.name}</div>
+              <div class="shame-bar-track">
+                <div class="shame-bar-fill" style="width:${(item.avg / 5 * 100).toFixed(0)}%"></div>
+              </div>
+              <div class="shame-bar-value">${item.avg}/5</div>
+            </div>
+          `;
+        }).join('');
+
+      const votesByConfession = {};
+      votes.forEach(v => {
+        if (!votesByConfession[v.confession_id]) votesByConfession[v.confession_id] = 0;
+        votesByConfession[v.confession_id]++;
+      });
+
+      const topConfessions = confessions
+        .map(c => ({ ...c, totalVotes: votesByConfession[c.id] || 0 }))
+        .sort((a, b) => b.totalVotes - a.totalVotes)
+        .slice(0, 5);
+
+      document.getElementById('top-confessions').innerHTML = topConfessions
+        .map(c => {
+          const lol = votes.filter(v => v.confession_id === c.id && v.emoji === 'lol').length;
+          const noway = votes.filter(v => v.confession_id === c.id && v.emoji === 'noway').length;
+          const relatable = votes.filter(v => v.confession_id === c.id && v.emoji === 'relatable').length;
+          return `
+            <div class="confession-featured">
+              <div class="featured-country">${c.country}</div>
+              <div class="featured-activity">${c.activity}</div>
+              <div class="featured-votes">
+                <span>😂 ${lol}</span>
+                <span>😱 ${noway}</span>
+                <span>😳 ${relatable}</span>
+                <span style="margin-left:auto; color:#555">${c.totalVotes} reactions</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+    }
+
+    loadLeaderboard();
+  </script>
+</body>
+</html>
