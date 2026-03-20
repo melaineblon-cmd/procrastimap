@@ -168,110 +168,112 @@
     font-size: 0.85rem; font-weight: 500; font-family: 'DM Sans', sans-serif;
   ">☕ Buy me a coffee</a>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const { createClient } = supabase;
-    const db = createClient(
-      'https://mdxgznjcokuxjdkzbias.supabase.co',
-      'sb_publishable_gNg5Ac1Ff6FDILMl8lXPFw_KRmMUQGR'
-    );
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const { createClient } = supabase;
+  const db = createClient(
+    'https://mdxgznjcokuxjdkzbias.supabase.co',
+    'sb_publishable_gNg5Ac1Ff6FDILMl8lXPFw_KRmMUQGR'
+  );
 
-    function getCountryName(raw) {
-      return raw.replace(/^\S+\s+/, '').trim();
-    }
+  function getCountryName(raw) {
+    return raw.replace(/^\S+\s+/, '').trim();
+  }
 
-    function rankColor(i) {
-      if (i === 0) return 'gold';
-      if (i === 1) return 'silver';
-      if (i === 2) return 'bronze';
-      return '';
-    }
+  function rankColor(i) {
+    if (i === 0) return 'gold';
+    if (i === 1) return 'silver';
+    if (i === 2) return 'bronze';
+    return '';
+  }
 
-    async function loadLeaderboard() {
-      const { data: confessions } = await db.from('procrastinations').select('*');
-      const { data: votes } = await db.from('votes').select('*');
+  async function loadLeaderboard() {
+    const { data: confessions } = await db.from('procrastinations').select('*');
+    const { data: votes } = await db.from('votes').select('*');
 
-      if (!confessions || !votes) return;
+    if (!confessions || !votes) return;
 
-      const byCountry = {};
-      confessions.forEach(c => {
-        const name = getCountryName(c.country);
-        if (!byCountry[name]) byCountry[name] = { count: 0, totalShame: 0 };
-        byCountry[name].count++;
-        byCountry[name].totalShame += c.shame_level || 0;
-      });
+    const byCountry = {};
+    confessions.forEach(c => {
+      const name = getCountryName(c.country);
+      if (!byCountry[name]) byCountry[name] = { count: 0, totalShame: 0 };
+      byCountry[name].count++;
+      byCountry[name].totalShame += c.shame_level || 0;
+    });
 
-      const sorted = Object.entries(byCountry)
-        .sort((a, b) => b[1].count - a[1].count);
-      const maxCount = sorted[0]?.[1].count || 1;
+    const sorted = Object.entries(byCountry)
+      .sort((a, b) => b[1].count - a[1].count);
+    const maxCount = sorted[0]?.[1].count || 1;
 
-      document.getElementById('shame-countries').innerHTML = shamed
-  .slice(0, 8)
-  .map(item => `
-    <div class="shame-bar-item">
-      <div class="shame-bar-label">${item.name}</div>
-      <div class="shame-bar-track">
-        <div class="shame-bar-fill" style="width:${(item.avg / 5 * 100).toFixed(0)}%"></div>
-      </div>
-      <div class="shame-bar-value">${item.avg}/5</div>
-    </div>
-  `).join('');
-
-      const shamed = Object.entries(byCountry)
-        .filter(([_, d]) => d.count >= 1)
-        .map(([name, data]) => ({
-          name,
-          avg: (data.totalShame / data.count).toFixed(1)
-        }))
-        .sort((a, b) => b.avg - a.avg);
-
-      document.getElementById('shame-countries').innerHTML = shamed
-        .slice(0, 8)
-        .map(([_, d], i, arr) => {
-          const item = shamed[i];
-          return `
-            <div class="shame-bar-item">
-              <div class="shame-bar-label">${item.name}</div>
-              <div class="shame-bar-track">
-                <div class="shame-bar-fill" style="width:${(item.avg / 5 * 100).toFixed(0)}%"></div>
-              </div>
-              <div class="shame-bar-value">${item.avg}/5</div>
+    document.getElementById('top-countries').innerHTML = sorted
+      .slice(0, 8)
+      .map(([name, data], i) => `
+        <div class="rank-item">
+          <div class="rank-number ${rankColor(i)}">${i + 1}</div>
+          <div style="flex:1">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div class="rank-name">${name}</div>
+              <div class="rank-value">${data.count}</div>
             </div>
-          `;
-        }).join('');
-
-      const votesByConfession = {};
-      votes.forEach(v => {
-        if (!votesByConfession[v.confession_id]) votesByConfession[v.confession_id] = 0;
-        votesByConfession[v.confession_id]++;
-      });
-
-      const topConfessions = confessions
-        .map(c => ({ ...c, totalVotes: votesByConfession[c.id] || 0 }))
-        .sort((a, b) => b.totalVotes - a.totalVotes)
-        .slice(0, 5);
-
-      document.getElementById('top-confessions').innerHTML = topConfessions
-        .map(c => {
-          const lol = votes.filter(v => v.confession_id === c.id && v.emoji === 'lol').length;
-          const noway = votes.filter(v => v.confession_id === c.id && v.emoji === 'noway').length;
-          const relatable = votes.filter(v => v.confession_id === c.id && v.emoji === 'relatable').length;
-          return `
-            <div class="confession-featured">
-              <div class="featured-country">${c.country}</div>
-              <div class="featured-activity">${c.activity}</div>
-              <div class="featured-votes">
-                <span>😂 ${lol}</span>
-                <span>😱 ${noway}</span>
-                <span>😳 ${relatable}</span>
-                <span style="margin-left:auto; color:#555">${c.totalVotes} reactions</span>
-              </div>
+            <div class="rank-bar">
+              <div class="rank-bar-fill" style="width:${(data.count / maxCount * 100).toFixed(0)}%"></div>
             </div>
-          `;
-        }).join('');
-    }
+          </div>
+        </div>
+      `).join('');
 
-    loadLeaderboard();
-  </script>
+    const shamed = Object.entries(byCountry)
+      .filter(([_, d]) => d.count >= 1)
+      .map(([name, data]) => ({
+        name,
+        avg: (data.totalShame / data.count).toFixed(1)
+      }))
+      .sort((a, b) => b.avg - a.avg);
+
+    document.getElementById('shame-countries').innerHTML = shamed
+      .slice(0, 8)
+      .map(item => `
+        <div class="shame-bar-item">
+          <div class="shame-bar-label">${item.name}</div>
+          <div class="shame-bar-track">
+            <div class="shame-bar-fill" style="width:${(item.avg / 5 * 100).toFixed(0)}%"></div>
+          </div>
+          <div class="shame-bar-value">${item.avg}/5</div>
+        </div>
+      `).join('');
+
+    const votesByConfession = {};
+    votes.forEach(v => {
+      if (!votesByConfession[v.confession_id]) votesByConfession[v.confession_id] = 0;
+      votesByConfession[v.confession_id]++;
+    });
+
+    const topConfessions = confessions
+      .map(c => ({ ...c, totalVotes: votesByConfession[c.id] || 0 }))
+      .sort((a, b) => b.totalVotes - a.totalVotes)
+      .slice(0, 5);
+
+    document.getElementById('top-confessions').innerHTML = topConfessions
+      .map(c => {
+        const lol = votes.filter(v => v.confession_id === c.id && v.emoji === 'lol').length;
+        const noway = votes.filter(v => v.confession_id === c.id && v.emoji === 'noway').length;
+        const relatable = votes.filter(v => v.confession_id === c.id && v.emoji === 'relatable').length;
+        return `
+          <div class="confession-featured">
+            <div class="featured-country">${c.country}</div>
+            <div class="featured-activity">${c.activity}</div>
+            <div class="featured-votes">
+              <span>😂 ${lol}</span>
+              <span>😱 ${noway}</span>
+              <span>😳 ${relatable}</span>
+              <span style="margin-left:auto; color:#555">${c.totalVotes} reactions</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+  }
+
+  loadLeaderboard();
+</script>
 </body>
 </html>
