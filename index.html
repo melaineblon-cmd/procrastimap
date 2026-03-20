@@ -127,7 +127,7 @@
       margin-bottom: 0; width: auto; padding: 0; cursor: pointer;
     }
     .pile-wrapper {
-      position: absolute;
+      position: fixed;
       bottom: 0;
       right: 0;
       pointer-events: none;
@@ -254,7 +254,7 @@
       document.getElementById('pile-counter').textContent = n + ' confessions 🌍';
       const canvas = document.getElementById('pile-canvas');
       const ctx = canvas.getContext('2d');
-      const W = 160, H = 180;
+      const W = 140, H = 160;
       ctx.clearRect(0, 0, W, H);
       const nb = Math.min(Math.ceil(n / 3), 22);
       if (nb === 0) return;
@@ -377,5 +377,11 @@
 
     loadConfessions();
   </script>
+  <div id="pile-wrapper" style="position: fixed; bottom: 0; right: 0; pointer-events: none; z-index: 50;">
+    <div id="pile-counter" style="font-family: 'Syne', sans-serif; font-size: 0.75rem; color: #FFE566; text-align: center; opacity: 0.7; padding: 4px 8px;"></div>
+    <canvas id="pile-canvas" width="140" height="160" style="display:block;"></canvas>
+  </div>
+
+  <div class="popup-overlay" id="popup">
 </body>
 </html>
