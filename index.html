@@ -119,7 +119,7 @@
       margin-bottom: 0; width: auto; padding: 0; cursor: pointer;
     }
     .pile-wrapper { text-align: center; margin-bottom: 1.5rem; }
-.pile-counter { font-family: 'Syne', sans-serif; font-size: 1rem; color: #FFE566; margin-bottom: 0.5rem; }
+    .pile-counter { font-family: 'Syne', sans-serif; font-size: 1rem; color: #FFE566; margin-bottom: 0.5rem; }
   </style>
 </head>
 <body>
@@ -131,10 +131,10 @@
       <h1>How have you procrastinated? 😬</h1>
       <p>Come on, we won't judge. okay, maybe a little.</p>
 
-   <div class="pile-wrapper">
-  <div id="pile-counter" class="pile-counter">0 confessions worldwide</div>
-  <canvas id="pile-canvas" width="180" height="230" style="display:block; margin: 0 auto;"></canvas>
-</div>
+      <div class="pile-wrapper">
+        <div id="pile-counter" class="pile-counter">0 confessions worldwide</div>
+        <canvas id="pile-canvas" width="180" height="230" style="display:block; margin: 0 auto;"></canvas>
+      </div>
 
       <label>Country</label>
       <select>
@@ -229,68 +229,65 @@
       { emoji: '🏆', title: 'Procrastinator of the day?', sub: 'This might be peak laziness. Congrats.' },
     ];
 
-   function updatePile(n) {
-  document.getElementById('pile-counter').textContent = n + ' confessions worldwide 🌍';
-  const canvas = document.getElementById('pile-canvas');
-  const ctx = canvas.getContext('2d');
-  const W = 180, H = 230;
-  ctx.clearRect(0, 0, W, H);
-  const nb = Math.min(Math.ceil(n / 3), 22);
-  if (nb === 0) return;
-
-  const shades = [
-    { face: '#E8EDF2', side: '#B8C4D0', top: '#D0D8E4', lines: 'rgba(100,120,150,0.25)' },
-    { face: '#EDF0F5', side: '#BEC8D5', top: '#D5DCE8', lines: 'rgba(100,120,150,0.2)'  },
-    { face: '#E2E8EE', side: '#B2BECE', top: '#CAD4E0', lines: 'rgba(100,120,150,0.3)'  },
-    { face: '#EFF2F7', side: '#C2CCDA', top: '#D8E0EC', lines: 'rgba(100,120,150,0.18)' },
-  ];
-
-  function seededRand(i, o) {
-    return ((Math.sin(i * 9.301 + o * 49.583) * 43758.5453) % 1 + 1) % 1;
-  }
-
-  function drawSheet(x, y, w, h, tilt, shade) {
-    ctx.save();
-    ctx.translate(x + w/2, y + h/2);
-    ctx.rotate(tilt);
-    const bw = w * 0.12;
-    const tw = w - bw;
-    const th = h;
-    ctx.fillStyle = shade.side;
-    ctx.beginPath();
-    ctx.moveTo(-w/2 + tw, -th/2);
-    ctx.lineTo(-w/2 + tw + bw, -th/2 + 3);
-    ctx.lineTo(-w/2 + tw + bw,  th/2 + 3);
-    ctx.lineTo(-w/2 + tw,       th/2);
-    ctx.closePath();
-    ctx.fill();
-    ctx.fillStyle = shade.top;
-    ctx.beginPath();
-    ctx.moveTo(-w/2,      -th/2);
-    ctx.lineTo(-w/2 + tw, -th/2);
-    ctx.lineTo(-w/2 + tw + bw, -th/2 + 3);
-    ctx.lineTo(-w/2 + bw, -th/2 + 3);
-    ctx.closePath();
-    ctx.fill();
-    ctx.fillStyle = shade.face;
-    ctx.fillRect(-w/2, -th/2 + 3, tw, th - 3);
-    ctx.fillStyle = shade.lines;
-    for (let i = 0; i < 3; i++) {
-      const ly = -th/2 + 3 + (th * 0.25) + i * (th * 0.18);
-      const lw = tw * (0.5 + seededRand(i, 7) * 0.3);
-      ctx.fillRect(-w/2 + tw * 0.1, ly, lw, 1.5);
-    }
-    ctx.restore();
-  }
-
-  const baseW = 140, sheetH = 9, gap = 1;
-  const baseY = H - 20, cx = W / 2 - 10;
-  for (let i = 0; i < nb; i++) {
-    const tilt = (seededRand(i, 3) - 0.5) * 0.08;
-    const xOff = (seededRand(i, 4) - 0.5) * 12;
-    const w = baseW - seededRand(i, 5) * 20;
-    const y = baseY - i * (sheetH + gap);
-    drawSheet(cx + xOff - w/2, y - sheetH, w, sheetH, tilt, shades[i % shades.length]);
+    function updatePile(n) {
+      document.getElementById('pile-counter').textContent = n + ' confessions worldwide 🌍';
+      const canvas = document.getElementById('pile-canvas');
+      const ctx = canvas.getContext('2d');
+      const W = 180, H = 230;
+      ctx.clearRect(0, 0, W, H);
+      const nb = Math.min(Math.ceil(n / 3), 22);
+      if (nb === 0) return;
+      const shades = [
+        { face: '#E8EDF2', side: '#B8C4D0', top: '#D0D8E4', lines: 'rgba(100,120,150,0.25)' },
+        { face: '#EDF0F5', side: '#BEC8D5', top: '#D5DCE8', lines: 'rgba(100,120,150,0.2)'  },
+        { face: '#E2E8EE', side: '#B2BECE', top: '#CAD4E0', lines: 'rgba(100,120,150,0.3)'  },
+        { face: '#EFF2F7', side: '#C2CCDA', top: '#D8E0EC', lines: 'rgba(100,120,150,0.18)' },
+      ];
+      function seededRand(i, o) {
+        return ((Math.sin(i * 9.301 + o * 49.583) * 43758.5453) % 1 + 1) % 1;
+      }
+      function drawSheet(x, y, w, h, tilt, shade) {
+        ctx.save();
+        ctx.translate(x + w/2, y + h/2);
+        ctx.rotate(tilt);
+        const bw = w * 0.12;
+        const tw = w - bw;
+        const th = h;
+        ctx.fillStyle = shade.side;
+        ctx.beginPath();
+        ctx.moveTo(-w/2 + tw, -th/2);
+        ctx.lineTo(-w/2 + tw + bw, -th/2 + 3);
+        ctx.lineTo(-w/2 + tw + bw,  th/2 + 3);
+        ctx.lineTo(-w/2 + tw,       th/2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = shade.top;
+        ctx.beginPath();
+        ctx.moveTo(-w/2,      -th/2);
+        ctx.lineTo(-w/2 + tw, -th/2);
+        ctx.lineTo(-w/2 + tw + bw, -th/2 + 3);
+        ctx.lineTo(-w/2 + bw, -th/2 + 3);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = shade.face;
+        ctx.fillRect(-w/2, -th/2 + 3, tw, th - 3);
+        ctx.fillStyle = shade.lines;
+        for (let i = 0; i < 3; i++) {
+          const ly = -th/2 + 3 + (th * 0.25) + i * (th * 0.18);
+          const lw = tw * (0.5 + seededRand(i, 7) * 0.3);
+          ctx.fillRect(-w/2 + tw * 0.1, ly, lw, 1.5);
+        }
+        ctx.restore();
+      }
+      const baseW = 140, sheetH = 9, gap = 1;
+      const baseY = H - 20, cx = W / 2 - 10;
+      for (let i = 0; i < nb; i++) {
+        const tilt = (seededRand(i, 3) - 0.5) * 0.08;
+        const xOff = (seededRand(i, 4) - 0.5) * 12;
+        const w = baseW - seededRand(i, 5) * 20;
+        const y = baseY - i * (sheetH + gap);
+        drawSheet(cx + xOff - w/2, y - sheetH, w, sheetH, tilt, shades[i % shades.length]);
+      }
     }
 
     function setHonte(niveau) {
